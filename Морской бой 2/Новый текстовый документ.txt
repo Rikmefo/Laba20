@@ -1,0 +1,305 @@
+ procedure TForm3.board2CellMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; Col, Row, X, Y: Integer);
+begin
+
+
+           repeat
+               z:=1;
+    if  Board2.layers[0][col,row].State=0
+    then   Board2.layers[0][col,row].State:=3  ;
+        if  Board2.layers[0][col,row].State=3
+    then                                          b:=1  ;
+    if  Board2.layers[0][col,row].State=2
+    then   Board2.layers[0][col,row].State:=4;
+    if ( Board2.layers[0][col,row].State=4)then
+    begin
+    b:=1  ;
+      t:=1;
+      end;
+                        { if Board2.layers[0][col,row].State=4 then
+                         if  (Board2.layers[0][col,row+1].State<>2) or  (Board2.layers[0][col,row-1].State<>2) or (Board2.layers[0][col+1,row].State<>2 )or (Board2.layers[0][col-1,row].State<>2) then
+                         begin
+                        Board2.layers[0][col,row].State:=5;
+                        if  (Board2.layers[0][col,row+1].State<>4) and  (Board2.layers[0][col,row+1].State<>5) then Board2.layers[0][col,row+1].State:=3;
+                        else begin
+                        Board2.layers[0][col,row+1].State=5
+                        end;
+                        if  (Board2.layers[0][col,row-1].State<>4) and  (Board2.layers[0][col,row-1].State<>5) then (Board2.layers[0][col,row-1].State:=3;)
+                        else
+                        if  (Board2.layers[0][col+1,row].State<>4) and  (Board2.layers[0][col+1,row].State<>5) then Board2.layers[0][col+1,row].State:=3;
+                        else
+                        if ( Board2.layers[0][col-1,row].State<>4) and  (Board2.layers[0][col-1,row].State<>5) then Board2.layers[0][col-1,row].State:=3;
+                        else
+                              end;    }
+        until b=1;
+        p:=0;
+                           for X:=0 to Board2.ColCnt-1 do
+
+     for Y:=0 to Board2.RowCnt-1 do
+     if Board2.layers[0][X,Y].State=2 then p:=p+1   ;
+
+     if p=0 then ShowMessage('Au iiaaaeee')  ;
+
+
+                                b:=0;
+                                z:=0;
+                                board2.enabled:=false;
+        e:=1;
+end;
+
+function Freedom (x, y: Integer; board1: TCellGameBoard): Boolean;
+const d: array[1..8,1..2] of Integer =
+      ((0,1),(1,0),(0,-1),(-1,0),(1,1),(-1,1),(1,-1),(-1,-1));
+var i: Integer;
+    dx, dy: Integer;
+begin
+  if (x >= 0) and (x < 10) and (y >= 0) and (y < 10) and (Board1.layers[0][X,Y].state=0) then
+  begin
+    for i := 1 to 8 do
+    begin
+      dx := x + d[i,1];
+      dy := y + d[i,2];
+      if (dx >= 0) and (dx < 10) and (dy >= 0) and (dy < 10) and (Board1.layers[0][dx,dy].state > 0) then
+      begin
+        Result := False;
+        Exit;
+      end; {if}
+    end; {for}
+    Result := True;
+  end else Result := False;
+end; {func Freedom}
+procedure Ships (var board1: TCellGameBoard);
+var N, M, i: Integer;
+    x, y, kx, ky: Integer;
+    B: Boolean;
+begin
+  randomize();
+  for N := 3 downto 0 do
+    for M := 0 to 3 - N do
+    repeat
+      x := Random (10);
+      y := Random (9);
+      kx := Random (2);
+      if kx = 0 then ky := 1
+                else ky := 0;
+      B := True;
+      for i := 0 to N do
+        if not Freedom (x + kx * i, y + ky * i, board1) then B := False;
+      if B then
+        for i := 0 to N do
+          Board1.layers[0][x+kx*i,y+ky*i].state := 1;
+    until B;
+
+
+end; {proc Ships}
+
+          procedure Ships1 (var board2: TCellGameBoard);
+var N, M, i: Integer;
+    x, y, kx, ky: Integer;
+    B: Boolean;
+begin
+  randomize();
+  for N := 3 downto 0 do
+    for M := 0 to 3 - N do
+    repeat
+      x := Random (10);
+      y := Random (9);
+      kx := Random (2);
+      if kx = 0 then ky := 1
+                else ky := 0;
+      B := True;
+      for i := 0 to N do
+        if not Freedom (x + kx * i, y + ky * i, board2) then B := False;
+      if B then
+        for i := 0 to N do
+          Board2.layers[0][x+kx*i,y+ky*i].state := 2;
+    until B;
+
+
+end;
+procedure TForm3.button3Click(Sender: TObject);
+var X, Y: Integer;
+begin
+  Randomize;
+  for X := 0 to Board1.ColCnt-1 do
+    for Y := 0 to Board1.ColCnt-1 do
+      Board1.layers[0][X,Y].State:=0;
+ships(board1);
+end;
+procedure TForm3.board1CellMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; Col, Row, X, Y: Integer);
+  var B,A: Boolean ;
+  kx,ky,i:integer;
+begin
+
+  if o=1 then begin if z<4 then
+                       begin
+
+                             if  not Freedom (col,row, board1) then b:=False;
+                             if b then  Board1.layers[0][col,row].State:=1;
+                             if b then z:=z+1;
+                             if not b then ShowMessage('Iai?aaeeuiia ianoiiiei?aiea');
+
+                          end else ShowMessage('O?a eiaaony 4 iaiiiaeoauo ei?aaey') ;
+                          end;
+
+                        case radiogroup3.itemindex of
+                                0:kx:=1;
+                                1:ky:=1 ;
+                                end;
+
+                                if q=1 then
+                                begin
+                                  if w<3 then
+      begin
+      for i := 0 to 1 do
+        if not Freedom (col + kx * i, row + ky * i, board1) then a := False;
+
+              if a then w:=w+1;
+                if a then Board1.layers[0][col,row].State:=1 ;
+                  if not a then ShowMessage('Iai?aaeeuiia ianoiiiei?aiea');
+                {if a then
+                Board1.layers[0][col+kx*1,row+ky*1].State:=1;   }
+                end else ShowMessage('O?a eiaaony 3 Aaooiaeoaiueo ei?aaey');
+                end            ;
+
+                       {case radiogroup2.itemindex of
+                       0: if z<4 then
+                       begin
+
+                             if  not Freedom (col,row, board1) then b:=False;
+                             if b then  Board1.layers[0][col,row].State:=1;
+                             if b then z:=z+1;
+                             if not b then ShowMessage('Iai?aaeeuiia ianoiiiei?aiea');
+
+                          end else ShowMessage('O?a eiaaony 4 iaiiiaeoauo ei?aaey') ;       }
+
+
+     { 1:if y<3 then
+      begin
+      for i := 0 to 1 do
+        if not Freedom (col + kx * i, row + ky * i, board1) then b := False;
+              if not b then ShowMessage('Iai?aaeeuiia ianoiiiei?aiea');
+              if b then
+              if b then y:=y+1;
+                if b then     for i := 0 to 1 do
+                Board1.layers[0][col+kx*i,row+ky*i].State:=1;
+                end else ShowMessage('O?a eiaaony 3 Aaooiaeoaiueo ei?aaey')   ;
+
+
+                       2: ;
+                       3:;
+              end;
+              radiogroup2.ItemIndex:=-1 ; }
+              o:=0;
+              q:=0;
+            board1.enabled:=false;
+
+            kx:=0;
+                                ky:=0;
+end;
+
+
+
+procedure TForm3.FormCreate(Sender: TObject);
+var x,y:Integer;
+begin
+z:=0;
+w:=0;
+q:=0;
+o:=0 ;
+p:=0;
+kx:=0;
+  ky:=0;
+
+         for X:=0 to Board1.ColCnt-1 do
+     for Y:=0 to Board1.RowCnt-1 do
+Board1.layers[0][X,Y].State:=0           ;
+   board1.enabled:=false ;
+   board2.enabled:=false ;
+end;
+ {
+procedure TForm3.radiogroup2Click(Sender: TObject);
+begin
+       board1.Enabled:=True;
+end;               }
+
+procedure TForm3.button2Click(Sender: TObject);
+begin
+    board1.Enabled:=True;
+    o:=1;
+end;
+
+procedure TForm3.button4Click(Sender: TObject);
+begin
+  board1.Enabled:=True;
+q:=1 ;
+end;
+
+procedure TForm3.button5Click(Sender: TObject);
+var X, Y: Integer;
+b:Boolean;
+begin
+  Randomize;
+           button3.Enabled:=False;
+  for X := 0 to Board1.ColCnt-1 do
+    for Y := 0 to Board1.ColCnt-1 do
+      Board2.layers[0][X,Y].State:=0;
+ships1(board2);
+
+board2.Enabled:=True;
+                        ;
+
+    {{ repeat
+        {for X := 0 to Board1.ColCnt-1 do
+    for Y := 0 to Board1.ColCnt-1 do
+    if Board2.layers[0][X,Y].State=0 then e:=e+1; 
+
+     until e=1;  }
+     {repeat
+       Label1.caption:='Aao oia';
+       until e=1;  }
+
+end;
+
+
+
+procedure TForm3.button6Click(Sender: TObject);
+var x,y:Integer;
+begin
+
+         repeat
+         x := Random (10);
+      y := Random (9);
+             repeat
+               z:=1;
+    if  Board1.layers[0][X,Y].State=0
+    then   Board1.layers[0][X,Y].State:=3  ;
+        if  Board1.layers[0][X,Y].State=3
+    then                                          b:=1  ;
+    until z=1 ;
+    if  Board1.layers[0][X,Y].State=1
+    then   Board1.layers[0][X,Y].State:=4;
+    if  Board1.layers[0][X,Y].State=4 then
+    z:=0;
+        until b=1;
+        b:=0;
+        z:=0;
+        board2.enabled:=true;
+end;
+
+
+
+procedure TForm3.tmr1Timer(Sender: TObject);
+begin
+if t=1 then board2.Enabled:=True;
+t:=0;
+end;
+
+procedure TForm3.button7Click(Sender: TObject);
+var x,y:Integer;
+begin
+for X:=0 to Board1.ColCnt-1 do
+     for Y:=0 to Board1.RowCnt-1 do
+Board1.layers[0][X,Y].State:=0
+end;
